@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>I Love My L</title>
+  <title>Para Minha L ❤️</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+
   <style>
-    /* Reset básico para garantir tela cheia e preta */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -15,270 +17,572 @@
     }
     
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       overflow: hidden;
-      background-color: #000000; /* Fundo totalmente preto como no vídeo */
-      font-family: 'Courier New', Courier, monospace; /* Fonte estilo código/hacker */
-      touch-action: none; /* Previne scroll no celular */
+      background: radial-gradient(circle at center, #24142d 0%, #0d0914 100%);
+      font-family: 'Nunito', sans-serif;
+      touch-action: none;
     }
 
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
+    /* Brilho romântico e suave ao fundo */
+    .bg-glow {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(255, 105, 180, 0.15) 0%, rgba(255, 153, 204, 0.05) 40%, rgba(0,0,0,0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      animation: pulseGlow 5s infinite ease-in-out;
     }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    }
+
+    /* -------------------------------------------
+       TELA DO MINI-GAME
+       ------------------------------------------- */
+    #intro-screen {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 100;
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .game-wrapper {
+      position: relative;
+      width: 90%; max-width: 360px;
+      display: flex; flex-direction: column;
+      align-items: center;
+    }
+
+    /* --- O GATINHO SUPER DETALHADO --- */
+    #character-container {
+      position: relative;
+      width: 160px; height: 160px;
+      margin-bottom: -30px; /* Faz ele se apoiar sutilmente no cartão */
+      z-index: 1;
+      /* O Drop Shadow cria o contorno perfeito em volta de toda a pixel art */
+      filter: drop-shadow(3px 0 0 #2c1a22) 
+              drop-shadow(-3px 0 0 #2c1a22) 
+              drop-shadow(0 3px 0 #2c1a22) 
+              drop-shadow(0 -3px 0 #2c1a22)
+              drop-shadow(0 12px 15px rgba(0,0,0,0.5));
+    }
+
+    #cat-svg {
+      width: 100%; height: 100%;
+      shape-rendering: crispEdges; /* Mantém os blocos perfeitamente quadrados */
+    }
+
+    /* Respiração do corpo todo */
+    #cat-all {
+      animation: breatheCat 3.5s infinite ease-in-out;
+      transform-origin: bottom center;
+    }
+
+    /* Movimento suave do rabinho colado no corpo */
+    #cat-tail {
+      transform-origin: 30px 37px; /* Ponto exato da base do rabo */
+      animation: swishTail 4s infinite ease-in-out;
+    }
+
+    @keyframes breatheCat {
+      0%, 100% { transform: scaleY(1) translateY(0); }
+      50% { transform: scaleY(1.02) translateY(-1px); }
+    }
+
+    @keyframes swishTail {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(4deg) scale(1.01); } /* Desliza suavemente na lateral */
+    }
+
+    /* Pulo ao clicar Sim */
+    @keyframes happyJump {
+      0%, 100% { transform: translateY(0) scale(1); }
+      30% { transform: translateY(-25px) scale(0.95, 1.05); }
+      50% { transform: translateY(0) scale(1.05, 0.95); }
+      70% { transform: translateY(-12px) scale(0.98, 1.02); }
+    }
+    .anim-happy { animation: happyJump 1s ease-in-out !important; }
+
+    /* --- CARTÃO FOFO PREMIUM --- */
+    .card {
+      position: relative; z-index: 2;
+      width: 100%;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 230, 240, 0.03));
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 35px;
+      padding: 40px 25px 35px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                  inset 0 0 25px rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    /* Estrelinhas decorativas no cartão */
+    .sparkle {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      animation: twinkle 2s infinite ease-in-out alternate;
+    }
+    @keyframes twinkle { 0% { opacity: 0.3; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
+
+    .card h2 {
+      background: linear-gradient(90deg, #ff99cc, #ffc0cb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 30px;
+      letter-spacing: 0.5px;
+      filter: drop-shadow(0 2px 5px rgba(255, 105, 180, 0.5));
+    }
+
+    .buttons {
+      display: flex; justify-content: center; align-items: center;
+      gap: 15px; width: 100%; min-height: 55px;
+    }
+
+    .btn {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.25rem; font-weight: 800;
+      border-radius: 28px;
+      cursor: pointer; outline: none;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-sim {
+      background: linear-gradient(135deg, #ff4d79 0%, #ff758c 100%);
+      border: none; color: white;
+      padding: 15px 35px;
+      box-shadow: 0 6px 20px rgba(255, 77, 121, 0.4), inset 0 -3px 0 rgba(0,0,0,0.15);
+      animation: pulseBtn 2s infinite;
+    }
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); box-shadow: 0 8px 25px rgba(255, 77, 121, 0.6), inset 0 -3px 0 rgba(0,0,0,0.15); }
+    }
+    .btn-sim:active { transform: scale(0.95); animation: none; }
+
+    #btn-nao {
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 182, 193, 0.4);
+      color: #ffb6c1;
+      padding: 13px 30px;
+      transition: top 0.2s ease, left 0.2s ease, transform 0.1s;
+    }
+    #btn-nao:hover { background: rgba(255, 255, 255, 0.15); }
+
+    /* Corações subindo */
+    .floating-heart {
+      position: absolute;
+      color: #ff4d79; font-size: 24px;
+      pointer-events: none;
+      animation: floatUp 1.2s forwards ease-out;
+      text-shadow: 0 0 12px rgba(255, 77, 121, 0.8);
+      z-index: 10;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(0.8) rotate(-10deg); }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.5) rotate(15deg); }
+    }
+
+    canvas { display: block; width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
   </style>
 </head>
 <body>
 
-  <!-- Canvas onde a mágica acontece -->
+  <div class="bg-glow"></div>
+
+  <div id="intro-screen">
+    <div class="game-wrapper">
+      
+      <!-- GATINHO PREMIUM DETALHADO -->
+      <div id="character-container">
+        <!-- Grid 44x44 para caber o gatinho e as sombras -->
+        <svg viewBox="0 0 44 44" id="cat-svg">
+          <g id="cat-all">
+            
+            <!-- RABO (Coladinho no corpo, atrás da perna) -->
+            <g id="cat-tail">
+              <!-- Sombreamento/Base -->
+              <rect x="29" y="34" width="4" height="5" fill="#e69522"/>
+              <!-- Base e curva suave -->
+              <rect x="30" y="33" width="4" height="6" fill="#ffb347"/>
+              <rect x="33" y="29" width="4" height="6" fill="#ffb347"/>
+              <rect x="34" y="25" width="3" height="6" fill="#ffb347"/>
+              <rect x="32" y="21" width="3" height="5" fill="#ffb347"/>
+              <!-- Pontinha Branca -->
+              <rect x="31" y="21" width="2" height="3" fill="#ffffff"/>
+              <!-- Luzes no Rabo -->
+              <rect x="30" y="33" width="1" height="6" fill="#ffc97a"/>
+              <rect x="33" y="29" width="1" height="4" fill="#ffc97a"/>
+              <rect x="34" y="25" width="1" height="4" fill="#ffc97a"/>
+              <!-- Listras escuras no Rabo -->
+              <rect x="34" y="27" width="3" height="2" fill="#ff9900"/>
+              <rect x="33" y="32" width="4" height="2" fill="#ff9900"/>
+            </g>
+
+            <!-- PERNAS TRASEIRAS (Coxas gordinhas) -->
+            <!-- Coxa Esquerda -->
+            <rect x="11" y="30" width="5" height="9" fill="#ffb347"/>
+            <rect x="10" y="32" width="2" height="5" fill="#ffb347"/>
+            <rect x="10" y="34" width="3" height="1" fill="#ff9900"/> <!-- Listra -->
+            <!-- Coxa Direita -->
+            <rect x="28" y="30" width="5" height="9" fill="#ffb347"/>
+            <rect x="32" y="32" width="2" height="5" fill="#ffb347"/>
+            <rect x="31" y="34" width="3" height="1" fill="#ff9900"/> <!-- Listra -->
+
+            <!-- PATINHAS TRASEIRAS -->
+            <rect x="9" y="39" width="6" height="3" fill="#ffffff"/>
+            <rect x="9" y="41" width="6" height="1" fill="#e6e6e6"/> <!-- Sombra do chão -->
+            <rect x="29" y="39" width="6" height="3" fill="#ffffff"/>
+            <rect x="29" y="41" width="6" height="1" fill="#e6e6e6"/>
+            
+            <!-- CORPO / BARRIGUINHA -->
+            <rect x="15" y="27" width="14" height="12" fill="#ffb347"/>
+            <!-- Barriga Branca -->
+            <rect x="17" y="27" width="10" height="12" fill="#ffffff"/>
+            <!-- Peito peludo branco -->
+            <rect x="15" y="29" width="14" height="3" fill="#ffffff"/>
+            <rect x="14" y="30" width="16" height="2" fill="#ffffff"/>
+
+            <!-- PATINHAS DIANTEIRAS -->
+            <rect x="17" y="35" width="4" height="7" fill="#ffffff"/>
+            <rect x="23" y="35" width="4" height="7" fill="#ffffff"/>
+            <rect x="16" y="39" width="5" height="3" fill="#ffffff"/>
+            <rect x="23" y="39" width="5" height="3" fill="#ffffff"/>
+            <!-- Sombra e dedinhos (linhas guias) -->
+            <rect x="16" y="41" width="5" height="1" fill="#e6e6e6"/>
+            <rect x="23" y="41" width="5" height="1" fill="#e6e6e6"/>
+            <rect x="17" y="40" width="1" height="2" fill="#dcdcdc"/>
+            <rect x="19" y="40" width="1" height="2" fill="#dcdcdc"/>
+            <rect x="24" y="40" width="1" height="2" fill="#dcdcdc"/>
+            <rect x="26" y="40" width="1" height="2" fill="#dcdcdc"/>
+            <!-- Almofadinhas rosadas nas patas da frente -->
+            <rect x="17" y="39" width="1" height="1" fill="#ff7aa2"/>
+            <rect x="24" y="39" width="1" height="1" fill="#ff7aa2"/>
+
+            <!-- SOMBRA DO PESCOÇO -->
+            <rect x="16" y="27" width="12" height="1" fill="#dcdcdc"/>
+
+            <!-- CABEÇA -->
+            <rect x="11" y="11" width="22" height="16" fill="#ffb347"/>
+            <rect x="9" y="13" width="26" height="12" fill="#ffb347"/>
+            <rect x="10" y="25" width="24" height="2" fill="#ffb347"/>
+            
+            <!-- Luz e Sombra da Cabeça -->
+            <rect x="12" y="11" width="20" height="1" fill="#ffc97a"/> <!-- Brilho topo -->
+            <rect x="11" y="26" width="22" height="1" fill="#e69522"/> <!-- Sombra queixo -->
+
+            <!-- Bochechas fofas e listras laterais -->
+            <rect x="8" y="18" width="2" height="5" fill="#ffb347"/>
+            <rect x="34" y="18" width="2" height="5" fill="#ffb347"/>
+            <rect x="8" y="19" width="3" height="1" fill="#ff9900"/>
+            <rect x="33" y="19" width="3" height="1" fill="#ff9900"/>
+            <rect x="9" y="21" width="3" height="1" fill="#ff9900"/>
+            <rect x="32" y="21" width="3" height="1" fill="#ff9900"/>
+
+            <!-- Listras na Testa -->
+            <rect x="21" y="11" width="2" height="4" fill="#ff9900"/>
+            <rect x="17" y="11" width="2" height="3" fill="#ff9900"/>
+            <rect x="25" y="11" width="2" height="3" fill="#ff9900"/>
+
+            <!-- ORELHAS -->
+            <!-- Esquerda -->
+            <rect x="11" y="6" width="6" height="5" fill="#ffb347"/>
+            <rect x="12" y="4" width="4" height="2" fill="#ffb347"/>
+            <rect x="13" y="2" width="2" height="2" fill="#ffb347"/>
+            <!-- Interior Rosa Esquerda -->
+            <rect x="12" y="7" width="4" height="4" fill="#ff99aa"/>
+            <rect x="13" y="5" width="2" height="2" fill="#ff99aa"/>
+            
+            <!-- Direita -->
+            <rect x="27" y="6" width="6" height="5" fill="#ffb347"/>
+            <rect x="28" y="4" width="4" height="2" fill="#ffb347"/>
+            <rect x="29" y="2" width="2" height="2" fill="#ffb347"/>
+            <!-- Interior Rosa Direita -->
+            <rect x="28" y="7" width="4" height="4" fill="#ff99aa"/>
+            <rect x="29" y="5" width="2" height="2" fill="#ff99aa"/>
+
+            <!-- FOCINHO / ÁREA BRANCA -->
+            <rect x="15" y="20" width="14" height="6" fill="#ffffff"/>
+            <rect x="14" y="22" width="16" height="4" fill="#ffffff"/>
+
+            <!-- OLHOS DETALHADOS -->
+            <g id="eyes-normal">
+              <!-- Olho Esquerdo -->
+              <rect x="12" y="16" width="5" height="6" fill="#1a1a1a"/>
+              <rect x="13" y="17" width="2" height="2" fill="#ffffff"/> <!-- Brilho Maior -->
+              <rect x="15" y="20" width="1" height="1" fill="#ffffff"/> <!-- Brilho Menor -->
+              
+              <!-- Olho Direito -->
+              <rect x="27" y="16" width="5" height="6" fill="#1a1a1a"/>
+              <rect x="28" y="17" width="2" height="2" fill="#ffffff"/> <!-- Brilho Maior -->
+              <rect x="30" y="20" width="1" height="1" fill="#ffffff"/> <!-- Brilho Menor -->
+            </g>
+
+            <!-- OLHOS FELIZES (Escondidos) -->
+            <g id="eyes-happy" style="display: none;">
+              <rect x="12" y="18" width="1" height="2" fill="#1a1a1a"/>
+              <rect x="13" y="17" width="3" height="1" fill="#1a1a1a"/>
+              <rect x="16" y="18" width="1" height="2" fill="#1a1a1a"/>
+              
+              <rect x="27" y="18" width="1" height="2" fill="#1a1a1a"/>
+              <rect x="28" y="17" width="3" height="1" fill="#1a1a1a"/>
+              <rect x="31" y="18" width="1" height="2" fill="#1a1a1a"/>
+            </g>
+
+            <!-- BLUSH / BOCHECHAS ROSADAS -->
+            <rect id="blush-left" x="10" y="21" width="3" height="2" fill="#ff7aa2" style="opacity: 0; transition: 0.3s;" />
+            <rect id="blush-right" x="31" y="21" width="3" height="2" fill="#ff7aa2" style="opacity: 0; transition: 0.3s;" />
+
+            <!-- NARIZ E BOCA -->
+            <!-- Narizinho Rosa -->
+            <rect x="21" y="20" width="2" height="1" fill="#ff7aa2"/>
+            <rect x="20" y="21" width="4" height="1" fill="#ff7aa2"/>
+
+            <!-- Boca Normal (:3) -->
+            <g id="mouth-normal">
+              <rect x="21" y="23" width="2" height="1" fill="#1a1a1a"/>
+              <rect x="19" y="24" width="2" height="1" fill="#1a1a1a"/>
+              <rect x="23" y="24" width="2" height="1" fill="#1a1a1a"/>
+            </g>
+
+            <!-- Boca Feliz (Aberta e sorrindo) -->
+            <g id="mouth-happy" style="display: none;">
+              <rect x="20" y="23" width="4" height="1" fill="#1a1a1a"/>
+              <rect x="20" y="24" width="4" height="2" fill="#ff7aa2"/>
+              <rect x="21" y="26" width="2" height="1" fill="#ff3366"/> <!-- Linguinha -->
+            </g>
+
+          </g>
+        </svg>
+      </div>
+
+      <!-- CARTÃO -->
+      <div class="card">
+        <div class="sparkle" style="top: 15px; left: 20px;">✨</div>
+        <div class="sparkle" style="top: 25px; right: 25px; animation-delay: 0.5s;">✨</div>
+        <div class="sparkle" style="bottom: 20px; left: 30px; animation-delay: 1s;">✨</div>
+        
+        <h2 id="pergunta">Você me ama?</h2>
+        <div class="buttons" id="btn-container">
+          <button class="btn btn-sim" id="btn-sim">Sim</button>
+          <button class="btn" id="btn-nao">Não</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <canvas id="heartCanvas"></canvas>
 
   <script>
+    const introScreen = document.getElementById('intro-screen');
+    const pergunta = document.getElementById('pergunta');
+    const btnSim = document.getElementById('btn-sim');
+    const btnNao = document.getElementById('btn-nao');
+    const charContainer = document.getElementById('character-container');
+    
+    // Elementos do rosto do gato
+    const eyesNormal = document.getElementById('eyes-normal');
+    const eyesHappy = document.getElementById('eyes-happy');
+    const mouthNormal = document.getElementById('mouth-normal');
+    const mouthHappy = document.getElementById('mouth-happy');
+    const blushLeft = document.getElementById('blush-left');
+    const blushRight = document.getElementById('blush-right');
+
+    let etapaGame = 1;
+
+    // Botão fujão
+    function fugirBotaoNao(e) {
+      if(e) e.preventDefault();
+      btnNao.style.position = 'fixed';
+      btnNao.style.zIndex = '200';
+      const padding = 20;
+      const maxX = window.innerWidth - btnNao.offsetWidth - padding;
+      const maxY = window.innerHeight - btnNao.offsetHeight - padding;
+      const randomX = Math.max(padding, Math.random() * maxX);
+      const randomY = Math.max(padding, Math.random() * maxY);
+      btnNao.style.left = randomX + 'px';
+      btnNao.style.top = randomY + 'px';
+    }
+
+    btnNao.addEventListener('touchstart', fugirBotaoNao, {passive: false});
+    btnNao.addEventListener('mouseover', fugirBotaoNao);
+    btnNao.addEventListener('click', fugirBotaoNao);
+
+    // Efeito de corações
+    function soltarCoracoes() {
+      const rect = charContainer.getBoundingClientRect();
+      for (let i = 0; i < 8; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerText = '❤';
+        heart.style.left = (rect.left + 50 + Math.random() * 60) + 'px';
+        heart.style.top = (rect.top + 30 + Math.random() * 30) + 'px';
+        heart.style.fontSize = (20 + Math.random() * 15) + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1200);
+      }
+    }
+
+    function setGatoFeliz(ativo) {
+      if (ativo) {
+        eyesNormal.style.display = 'none';
+        eyesHappy.style.display = 'block';
+        mouthNormal.style.display = 'none';
+        mouthHappy.style.display = 'block';
+        blushLeft.style.opacity = '1';
+        blushRight.style.opacity = '1';
+        charContainer.classList.add('anim-happy');
+        soltarCoracoes();
+      } else {
+        eyesNormal.style.display = 'block';
+        eyesHappy.style.display = 'none';
+        mouthNormal.style.display = 'block';
+        mouthHappy.style.display = 'none';
+        blushLeft.style.opacity = '0';
+        blushRight.style.opacity = '0';
+        charContainer.classList.remove('anim-happy');
+      }
+    }
+
+    btnSim.addEventListener('click', () => {
+      if (etapaGame === 1) {
+        setGatoFeliz(true);
+        setTimeout(() => {
+          setGatoFeliz(false);
+          pergunta.innerText = "Quer ver uma surpresa?";
+          btnNao.style.position = 'static';
+          etapaGame = 2;
+        }, 1400);
+      } else if (etapaGame === 2) {
+        setGatoFeliz(true);
+        introScreen.style.opacity = '0';
+        introScreen.style.transform = 'scale(0.85)';
+        setTimeout(() => {
+          introScreen.style.display = 'none';
+          resize();
+          animate();
+        }, 1000);
+      }
+    });
+
+    /* --- LÓGICA DO CORAÇÃO FINAL --- */
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
 
-    let width, height, dpr, heartScale;
-    let particles = [];
-    let frame = 0;
-    
-    // Variáveis de controle de tempo e sequência
-    let maxParticleDelay = 0;
-    let isHeartFormed = false;
-    let centerAlpha = 0;
-    let pulseTime = 0;
+    let width, height, dpr, heartScale, particles = [], frame = 0;
+    let maxParticleDelay = 0, isHeartFormed = false, centerAlpha = 0, pulseTime = 0;
 
-    // Textos que formam o coração
-    const textPool = [
-      "Love You",
-      "I Love You",
-      "Love You <3",
-      "I Love You <3"
-    ];
+    const textPool = ["Love You", "I Love You", "Meow <3", "Miau <3"];
 
-    // Equação paramétrica matemática do coração
     function getHeartPoint(t) {
       const x = 16 * Math.pow(Math.sin(t), 3);
       const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
       return { x, y };
     }
 
-    // Configuração de responsividade (Celular e PC)
     function resize() {
-      width = window.innerWidth;
-      height = window.innerHeight;
+      width = window.innerWidth; height = window.innerHeight;
       dpr = window.devicePixelRatio || 1;
-
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = width + 'px';
-      canvas.style.height = height + 'px';
-
+      canvas.width = width * dpr; canvas.height = height * dpr;
+      canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
       ctx.scale(dpr, dpr);
-      
-      // Define o tamanho do coração baseado na menor dimensão da tela
-      heartScale = Math.min(width, height) / 40;
-      
+      heartScale = Math.min(width, height) / 42;
       initParticles();
     }
 
-    // Classe para cada pequena frase "I Love You"
     class TextParticle {
       constructor(x, y, delay, isContour) {
-        this.baseX = x;
-        this.baseY = y;
-        this.delay = delay;
+        this.baseX = x; this.baseY = y; this.delay = delay;
         this.text = textPool[Math.floor(Math.random() * textPool.length)];
-        
-        // Tamanho menor para celular, maior para PC
-        const baseSize = width < 600 ? 10 : 13;
-        this.size = baseSize + (Math.random() * 2 - 1);
-        
-        this.alpha = 0;
-        this.maxAlpha = 0.5 + Math.random() * 0.5; // Opacidade máxima variada
-        
-        // Parâmetros de cintilação (Flicker) similar ao código Pygame original
+        this.size = (width < 600 ? 10 : 14) + (Math.random() * 2 - 1);
+        this.alpha = 0; this.maxAlpha = 0.6 + Math.random() * 0.4;
         this.flickerPhase = Math.random() * Math.PI * 2;
         this.flickerSpeed = 0.03 + Math.random() * 0.03;
-
-        // Tons de neon ciano / azul claro
-        const colors = ['#00f0ff', '#00d4ff', '#7dd3fc', '#bae6fd'];
+        const colors = ['#ff4d79', '#ff758c', '#ff99cc', '#ffb6c1'];
         this.color = colors[Math.floor(Math.random() * colors.length)];
         this.isContour = isContour;
       }
-
-      update(currentFrame) {
-        // Surgimento sequencial
-        if (currentFrame > this.delay) {
-          if (this.alpha < this.maxAlpha) {
-            this.alpha += 0.03; // Velocidade de fade-in das partículas
-          }
-        }
-      }
-
+      update(currentFrame) { if (currentFrame > this.delay && this.alpha < this.maxAlpha) this.alpha += 0.03; }
       draw(centerX, centerY, pulseScale) {
         if (this.alpha <= 0) return;
-
-        // Efeito de cintilação senoidal (pisca-pisca suave)
-        const flicker = 0.75 + 0.25 * Math.sin(frame * this.flickerSpeed + this.flickerPhase);
-        const currentAlpha = this.alpha * flicker;
-
+        const currentAlpha = this.alpha * (0.8 + 0.2 * Math.sin(frame * this.flickerSpeed + this.flickerPhase));
         ctx.save();
-        // Aplica o pulso na posição
         ctx.translate(centerX + (this.baseX * pulseScale), centerY + (this.baseY * pulseScale));
-        
-        ctx.font = `${this.size}px 'Courier New', monospace`;
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = currentAlpha;
-        
-        // Brilho Neon (Glow)
-        ctx.shadowColor = '#00f0ff';
-        ctx.shadowBlur = this.isContour ? 8 : 3;
-        
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+        ctx.font = `bold ${this.size}px 'Nunito', sans-serif`;
+        ctx.fillStyle = this.color; ctx.globalAlpha = currentAlpha;
+        ctx.shadowColor = '#ff3366'; ctx.shadowBlur = this.isContour ? 10 : 4;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(this.text, 0, 0);
         ctx.restore();
       }
     }
 
-    // Inicializa a nuvem de palavras
     function initParticles() {
-      particles = [];
-      frame = 0;
-      maxParticleDelay = 0;
-      isHeartFormed = false;
-      centerAlpha = 0;
-      pulseTime = 0;
-
-      // Quantidade de partículas baseada no tamanho da tela
-      const isMobile = width < 600;
-      const totalParticles = isMobile ? 350 : 600;
+      particles = []; frame = 0; maxParticleDelay = 0; isHeartFormed = false; centerAlpha = 0; pulseTime = 0;
+      const totalParticles = width < 600 ? 350 : 600;
       const contourCount = Math.floor(totalParticles * 0.4);
       const innerCount = totalParticles - contourCount;
 
-      // 1. Cria o contorno do coração (Delay menor, aparece primeiro)
       for (let i = 0; i < contourCount; i++) {
-        const t = (i / contourCount) * Math.PI * 2;
-        const pt = getHeartPoint(t);
-        
-        const delay = Math.random() * 200; // Aparece aleatoriamente nos primeiros 200 frames
+        const t = (i / contourCount) * Math.PI * 2, pt = getHeartPoint(t), delay = Math.random() * 200;
         if (delay > maxParticleDelay) maxParticleDelay = delay;
-
         particles.push(new TextParticle(pt.x * heartScale, pt.y * heartScale, delay, true));
       }
-
-      // 2. Cria o preenchimento interno (Delay maior, aparece depois)
       for (let i = 0; i < innerCount; i++) {
-        const t = Math.random() * Math.PI * 2;
-        const pt = getHeartPoint(t);
-        // Raio aleatório para distribuir dentro do coração
-        const r = 0.1 + Math.sqrt(Math.random()) * 0.85; 
-        
-        const delay = 100 + Math.random() * 250; // Aparece entre o frame 100 e 350
+        const t = Math.random() * Math.PI * 2, pt = getHeartPoint(t), r = 0.1 + Math.sqrt(Math.random()) * 0.85;
+        const delay = 100 + Math.random() * 250;
         if (delay > maxParticleDelay) maxParticleDelay = delay;
-
         particles.push(new TextParticle(pt.x * heartScale * r, pt.y * heartScale * r, delay, false));
       }
     }
 
-    // Calcula o batimento cardíaco (Ritmo Lub-Dub)
-    function getPulseScale() {
-      if (!isHeartFormed) return 1.0;
-      
-      // O pulso só cresce após o texto aparecer
-      if (centerAlpha < 0.5) return 1.0;
-
-      pulseTime += 0.045; // Velocidade do batimento
-      const cycle = pulseTime % (Math.PI * 2);
-      
-      // Equação para simular os dois batimentos seguidos de um coração real
-      const lub = Math.pow(Math.max(0, Math.sin(cycle)), 12) * 0.08;
-      const dub = Math.pow(Math.max(0, Math.sin(cycle - 0.35)), 12) * 0.05;
-      
-      return 1 + lub + dub;
-    }
-
-    // Renderiza o texto central com super brilho neon
     function drawCenterText(centerX, centerY, scale) {
       if (centerAlpha <= 0) return;
-
-      const fontSize = width < 600 ? 32 : 55;
-      
       ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.scale(scale, scale); // O texto também pulsa
-
-      ctx.font = `bold ${fontSize}px 'Arial', sans-serif`; // Fonte mais grossa para destacar
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-
-      // Camada 1: Glow Gigante Externo Ciano
-      ctx.shadowColor = '#00f0ff';
-      ctx.shadowBlur = 40;
-      ctx.fillStyle = `rgba(0, 240, 255, ${centerAlpha * 0.5})`;
-      ctx.fillText("I Love My L", 0, 0);
-
-      // Camada 2: Glow Médio
-      ctx.shadowBlur = 15;
-      ctx.fillStyle = `rgba(0, 240, 255, ${centerAlpha * 0.8})`;
-      ctx.fillText("I Love My L", 0, 0);
-
-      // Camada 3: Núcleo Branco brilhante
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = `rgba(255, 255, 255, ${centerAlpha})`;
-      ctx.fillText("I Love My L", 0, 0);
-
+      ctx.translate(centerX, centerY); ctx.scale(scale, scale);
+      ctx.font = `900 ${width < 600 ? 36 : 60}px 'Nunito', sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = '#ff1a75'; ctx.shadowBlur = 30;
+      ctx.fillStyle = `rgba(255, 105, 180, ${centerAlpha * 0.5})`; ctx.fillText("I Love My L", 0, 0);
+      ctx.shadowBlur = 10; ctx.fillStyle = `rgba(255, 153, 204, ${centerAlpha * 0.8})`; ctx.fillText("I Love My L", 0, 0);
+      ctx.shadowBlur = 0; ctx.fillStyle = `rgba(255, 255, 255, ${centerAlpha})`; ctx.fillText("I Love My L", 0, 0);
       ctx.restore();
     }
 
-    // Loop de Animação
     function animate() {
       frame++;
-      
-      // Limpa a tela pintando tudo de preto
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = '#0a0510'; ctx.fillRect(0, 0, width, height);
+      const centerX = width / 2, centerY = height / 2 - (width < 600 ? 20 : 30);
+      if (!isHeartFormed && frame > maxParticleDelay + 60) isHeartFormed = true;
+      if (isHeartFormed && centerAlpha < 1.0) centerAlpha += 0.008;
 
-      const centerX = width / 2;
-      const centerY = height / 2 - (width < 600 ? 20 : 30); // Sobe um pouquinho no eixo Y
-
-      // Verifica se todos os delays já passaram (coração completamente formado) + uma pausa de suspense (60 frames)
-      if (!isHeartFormed && frame > maxParticleDelay + 60) {
-        isHeartFormed = true;
+      let pulseScale = 1.0;
+      if (isHeartFormed && centerAlpha >= 0.5) {
+        pulseTime += 0.045;
+        const cycle = pulseTime % (Math.PI * 2);
+        pulseScale = 1 + (Math.pow(Math.max(0, Math.sin(cycle)), 12) * 0.06) + (Math.pow(Math.max(0, Math.sin(cycle - 0.35)), 12) * 0.04);
       }
 
-      // Se o coração já se formou, começa a revelar a mensagem principal
-      if (isHeartFormed && centerAlpha < 1.0) {
-        centerAlpha += 0.008; // Velocidade de fade-in super suave e dramática da mensagem central
-      }
-
-      // Obtém o tamanho atual baseado no batimento cardíaco
-      const pulseScale = getPulseScale();
-
-      // Desenha todas as pequenas frases que formam o coração
       for (let i = 0; i < particles.length; i++) {
-        particles[i].update(frame);
-        particles[i].draw(centerX, centerY, pulseScale);
+        particles[i].update(frame); particles[i].draw(centerX, centerY, pulseScale);
       }
-
-      // Desenha o texto principal por cima de tudo
       drawCenterText(centerX, centerY, pulseScale);
-
       requestAnimationFrame(animate);
     }
-
-    // Inicia tudo
     window.addEventListener('resize', resize);
-    window.onload = () => {
-      resize();
-      animate();
-    };
   </script>
 </body>
 </html>
-```eof
