@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>I Love My L</title>
+  <style>
+    /* Reset básico para garantir tela cheia e preta */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000000; /* Fundo totalmente preto como no vídeo */
+      font-family: 'Courier New', Courier, monospace; /* Fonte estilo código/hacker */
+      touch-action: none; /* Previne scroll no celular */
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Canvas onde a mágica acontece -->
+  <canvas id="heartCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height, dpr, heartScale;
+    let particles = [];
+    let frame = 0;
+    
+    // Variáveis de controle de tempo e sequência
+    let maxParticleDelay = 0;
+    let isHeartFormed = false;
+    let centerAlpha = 0;
+    let pulseTime = 0;
+
+    // Textos que formam o coração
+    const textPool = [
+      "Love You",
+      "I Love You",
+      "Love You <3",
+      "I Love You <3"
+    ];
+
+    // Equação paramétrica matemática do coração
+    function getHeartPoint(t) {
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+      return { x, y };
+    }
+
+    // Configuração de responsividade (Celular e PC)
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      dpr = window.devicePixelRatio || 1;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+
+      ctx.scale(dpr, dpr);
+      
+      // Define o tamanho do coração baseado na menor dimensão da tela
+      heartScale = Math.min(width, height) / 40;
+      
+      initParticles();
+    }
+
+    // Classe para cada pequena frase "I Love You"
+    class TextParticle {
+      constructor(x, y, delay, isContour) {
+        this.baseX = x;
+        this.baseY = y;
+        this.delay = delay;
+        this.text = textPool[Math.floor(Math.random() * textPool.length)];
+        
+        // Tamanho menor para celular, maior para PC
+        const baseSize = width < 600 ? 10 : 13;
+        this.size = baseSize + (Math.random() * 2 - 1);
+        
+        this.alpha = 0;
+        this.maxAlpha = 0.5 + Math.random() * 0.5; // Opacidade máxima variada
+        
+        // Parâmetros de cintilação (Flicker) similar ao código Pygame original
+        this.flickerPhase = Math.random() * Math.PI * 2;
+        this.flickerSpeed = 0.03 + Math.random() * 0.03;
+
+        // Tons de neon ciano / azul claro
+        const colors = ['#00f0ff', '#00d4ff', '#7dd3fc', '#bae6fd'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.isContour = isContour;
+      }
+
+      update(currentFrame) {
+        // Surgimento sequencial
+        if (currentFrame > this.delay) {
+          if (this.alpha < this.maxAlpha) {
+            this.alpha += 0.03; // Velocidade de fade-in das partículas
+          }
+        }
+      }
+
+      draw(centerX, centerY, pulseScale) {
+        if (this.alpha <= 0) return;
+
+        // Efeito de cintilação senoidal (pisca-pisca suave)
+        const flicker = 0.75 + 0.25 * Math.sin(frame * this.flickerSpeed + this.flickerPhase);
+        const currentAlpha = this.alpha * flicker;
+
+        ctx.save();
+        // Aplica o pulso na posição
+        ctx.translate(centerX + (this.baseX * pulseScale), centerY + (this.baseY * pulseScale));
+        
+        ctx.font = `${this.size}px 'Courier New', monospace`;
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = currentAlpha;
+        
+        // Brilho Neon (Glow)
+        ctx.shadowColor = '#00f0ff';
+        ctx.shadowBlur = this.isContour ? 8 : 3;
+        
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.text, 0, 0);
+        ctx.restore();
+      }
+    }
+
+    // Inicializa a nuvem de palavras
+    function initParticles() {
+      particles = [];
+      frame = 0;
+      maxParticleDelay = 0;
+      isHeartFormed = false;
+      centerAlpha = 0;
+      pulseTime = 0;
+
+      // Quantidade de partículas baseada no tamanho da tela
+      const isMobile = width < 600;
+      const totalParticles = isMobile ? 350 : 600;
+      const contourCount = Math.floor(totalParticles * 0.4);
+      const innerCount = totalParticles - contourCount;
+
+      // 1. Cria o contorno do coração (Delay menor, aparece primeiro)
+      for (let i = 0; i < contourCount; i++) {
+        const t = (i / contourCount) * Math.PI * 2;
+        const pt = getHeartPoint(t);
+        
+        const delay = Math.random() * 200; // Aparece aleatoriamente nos primeiros 200 frames
+        if (delay > maxParticleDelay) maxParticleDelay = delay;
+
+        particles.push(new TextParticle(pt.x * heartScale, pt.y * heartScale, delay, true));
+      }
+
+      // 2. Cria o preenchimento interno (Delay maior, aparece depois)
+      for (let i = 0; i < innerCount; i++) {
+        const t = Math.random() * Math.PI * 2;
+        const pt = getHeartPoint(t);
+        // Raio aleatório para distribuir dentro do coração
+        const r = 0.1 + Math.sqrt(Math.random()) * 0.85; 
+        
+        const delay = 100 + Math.random() * 250; // Aparece entre o frame 100 e 350
+        if (delay > maxParticleDelay) maxParticleDelay = delay;
+
+        particles.push(new TextParticle(pt.x * heartScale * r, pt.y * heartScale * r, delay, false));
+      }
+    }
+
+    // Calcula o batimento cardíaco (Ritmo Lub-Dub)
+    function getPulseScale() {
+      if (!isHeartFormed) return 1.0;
+      
+      // O pulso só cresce após o texto aparecer
+      if (centerAlpha < 0.5) return 1.0;
+
+      pulseTime += 0.045; // Velocidade do batimento
+      const cycle = pulseTime % (Math.PI * 2);
+      
+      // Equação para simular os dois batimentos seguidos de um coração real
+      const lub = Math.pow(Math.max(0, Math.sin(cycle)), 12) * 0.08;
+      const dub = Math.pow(Math.max(0, Math.sin(cycle - 0.35)), 12) * 0.05;
+      
+      return 1 + lub + dub;
+    }
+
+    // Renderiza o texto central com super brilho neon
+    function drawCenterText(centerX, centerY, scale) {
+      if (centerAlpha <= 0) return;
+
+      const fontSize = width < 600 ? 32 : 55;
+      
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.scale(scale, scale); // O texto também pulsa
+
+      ctx.font = `bold ${fontSize}px 'Arial', sans-serif`; // Fonte mais grossa para destacar
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Camada 1: Glow Gigante Externo Ciano
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 40;
+      ctx.fillStyle = `rgba(0, 240, 255, ${centerAlpha * 0.5})`;
+      ctx.fillText("I Love My L", 0, 0);
+
+      // Camada 2: Glow Médio
+      ctx.shadowBlur = 15;
+      ctx.fillStyle = `rgba(0, 240, 255, ${centerAlpha * 0.8})`;
+      ctx.fillText("I Love My L", 0, 0);
+
+      // Camada 3: Núcleo Branco brilhante
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = `rgba(255, 255, 255, ${centerAlpha})`;
+      ctx.fillText("I Love My L", 0, 0);
+
+      ctx.restore();
+    }
+
+    // Loop de Animação
+    function animate() {
+      frame++;
+      
+      // Limpa a tela pintando tudo de preto
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, width, height);
+
+      const centerX = width / 2;
+      const centerY = height / 2 - (width < 600 ? 20 : 30); // Sobe um pouquinho no eixo Y
+
+      // Verifica se todos os delays já passaram (coração completamente formado) + uma pausa de suspense (60 frames)
+      if (!isHeartFormed && frame > maxParticleDelay + 60) {
+        isHeartFormed = true;
+      }
+
+      // Se o coração já se formou, começa a revelar a mensagem principal
+      if (isHeartFormed && centerAlpha < 1.0) {
+        centerAlpha += 0.008; // Velocidade de fade-in super suave e dramática da mensagem central
+      }
+
+      // Obtém o tamanho atual baseado no batimento cardíaco
+      const pulseScale = getPulseScale();
+
+      // Desenha todas as pequenas frases que formam o coração
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update(frame);
+        particles[i].draw(centerX, centerY, pulseScale);
+      }
+
+      // Desenha o texto principal por cima de tudo
+      drawCenterText(centerX, centerY, pulseScale);
+
+      requestAnimationFrame(animate);
+    }
+
+    // Inicia tudo
+    window.addEventListener('resize', resize);
+    window.onload = () => {
+      resize();
+      animate();
+    };
+  </script>
+</body>
+</html>
+```eof
